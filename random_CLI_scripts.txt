@@ -1,0 +1,17 @@
+# killing excess check_mk instances
+for X in $( ps aux | grep check_mk | grep -v grep | awk '{ print $2 }'); do kill -9 $X; done
+
+# quickly show CF and KS info for Cassandra
+echo "show schema;" | cassandra-cli -h `hostname -i` |grep -i create | cut -d ' ' -f 2-4
+
+# get rough idea what compaction percentages are for Cassandra
+awk '/\~/ {print $17}' cassandra.log | sort | uniq -c |sort -n
+
+# get IP and hash number from nodetool ring for copy/pasting
+nodetool ring | awk '{ print $1 "\t" $8 }'
+
+# get Cassandra thread counts per node (gawk is operating upon the servo output)
+servo pools:prod,spackler -- ps -eLf \| grep cassandra \| grep -v grep \| wc -l | gawk '/out: [0-9]+/ { temp = substr($1,2,5); printf "%s: %d\n",temp, $3 }'
+
+# how many drives does a Dell machine have?
+ipmitool -U root -P calvin -I lanplus -H <idrac_ip> delloem sensor | grep -a1 Presence | grep Drive | wc -l
