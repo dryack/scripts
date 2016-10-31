@@ -41,7 +41,7 @@ sed -i '/endpoint_snitch:/s/SimpleSnitch/Ec2Snitch/g' /etc/cassandra/conf/cassan
 
 # prep cassandra-env.sh
 cp /etc/cassandra/conf/cassandra-env.sh /etc/cassandra/conf/cassandra-env.sh.bak
-vim /etc/cassandra/conf/cassandra-env.sh -c ":228" 
+vim /etc/cassandra/conf/cassandra-env.sh -c ":228" -c "normal 3dd" -i "normal i LOCAL_JMX=no"
 
 # ensure cassandra user's env provides java 1.8
 echo -e "export JAVA_HOME=/opt/java/1.8.0_40\nexport PATH=\$PATH:/opt/java/1.8.0_40" > /etc/profile.d/jdk.sh
